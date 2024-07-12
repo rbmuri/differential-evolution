@@ -22,7 +22,7 @@ class Populacao:
         self.best = float("inf")
     
     def mutate(self, x1, x2, x3, x4):
-        res = x1
+        res = np.copy(x1)
         for i in range(len(x1)):
             if np.random.random() < self.cr:
                 res[i] = x2[i] + self.f * (x3[i] - x4[i])
@@ -42,6 +42,7 @@ class Populacao:
         self.history.append(self.best)
 
     def evolve(self, ind):
+        print(self.best)
         #choose four dudes
         chosen = np.random.permutation(self.size)
         #the four dudes are now vectors!
@@ -76,7 +77,7 @@ class Populacao:
             strvalue += "\n"
         return strvalue
 
-pop = Populacao(0.6, 3, 10, 0.5)
+pop = Populacao(0.8, 3, 50, 0.9)
 pop.initpop()
 print(pop)
 pop.run(100)
