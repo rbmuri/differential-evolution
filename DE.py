@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib as mpl 
+import matplotlib.pyplot as plt
 from funct import *
 
 def crossover(CR, n):
@@ -42,7 +43,6 @@ class Populacao:
         self.history.append(self.best)
 
     def evolve(self, ind):
-        print(self.best)
         #choose four dudes
         chosen = np.random.permutation(self.size)
         #the four dudes are now vectors!
@@ -77,10 +77,24 @@ class Populacao:
             strvalue += "\n"
         return strvalue
 
-pop = Populacao(0.8, 3, 50, 0.9)
-pop.initpop()
-print(pop)
-pop.run(100)
+pop1 = Populacao(0.8, 3, 50, 0.9)
+pop1.initpop()
+pop1.run(100)
 
-print(pop.history)
-print("\nran! best =", pop.best)
+pop2 = Populacao(0.8, 3, 50, 0.8)
+pop2.initpop()
+pop2.run(100)
+
+print("\nran! best =", pop1.best, "\n")
+
+fig, ax = plt.subplots()
+
+ax.plot(pop1.history, label="Population 1")
+ax.plot(pop2.history, label="Population 2")
+plt.yscale('log')
+plt.xlabel("Iteration")
+plt.ylabel("Best Value")
+plt.title("Differential Evolution")
+plt.legend()
+plt.show()
+
