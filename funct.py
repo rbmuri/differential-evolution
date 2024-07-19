@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-def funct(x, fun = 1):
+def funct(x, fun):
 
     n = len(x)
     Q = matpi(n)
