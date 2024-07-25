@@ -106,9 +106,9 @@ class Populacao:
         return strvalue
 
 test1 = []
-for i in range(1000):
+for i in range(100):
     pop1 = Populacao(0.8, 3, 50, 0.9, 1)
-    pop1.run(1000)
+    pop1.run(100)
     test1.append(pop1.besty)
 
 test2 = []
