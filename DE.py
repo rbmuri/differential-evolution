@@ -25,6 +25,7 @@ class Populacao:
         self.y = []
         self.besty = float("inf")
         self.chosen_function = chosen_function
+        self.comeback_bool = 0
         self.initpop()
         
     
@@ -57,6 +58,13 @@ class Populacao:
         x1 = self.pop[ind]
         x2 = self.pop[chosen[1]]
         x3 = self.pop[chosen[2]]
+        if self.comeback_bool == 1:
+            if len(self.x_history) > 4:
+                if np.random.random() < 0.1:
+                    x3 = self.x_history[np.random.randint(
+                        len(self.x_history)-6,
+                        len(self.x_history)-1
+                    )]
         x4 = self.pop[chosen[3]]
         #mutate
         mutation = self.mutate(x1, x2, x3, x4)
@@ -85,7 +93,9 @@ class Populacao:
             self.y_history.append(self.besty)
             self.x_history.append(self.bestx)
 
-        
+    def comeback(self):
+        self.comeback_bool = 1    
+
     #prints a line for each individual (with d elements)
     def __str__(self):
         strvalue = ""
@@ -95,18 +105,27 @@ class Populacao:
             strvalue += "\n"
         return strvalue
 
-pop1 = Populacao(0.8, 3, 50, 0.9, 1)
-pop1.run(100)
+test1 = []
+for i in range(1000):
+    pop1 = Populacao(0.8, 3, 50, 0.9, 1)
+    pop1.run(1000)
+    test1.append(pop1.besty)
 
-pop2 = Populacao(0.8, 3, 50, 0.9, 3)
-pop2.run(100)
+test2 = []
+for i in range(100):
+    pop2 = Populacao(0.8, 3, 50, 0.9, 1)
+    pop2.comeback()
+    pop2.run(100)
+    test2.append(pop2.besty)
+test1.sort(reverse=True)
+test2.sort(reverse=True)
 
 print("\nran! besty =", pop1.besty, "\n")
 
 fig, ax = plt.subplots()
 
-ax.plot(pop1.y_history, label="Population 1")
-ax.plot(pop2.y_history, label="Population 2")
+ax.plot(test1, label="Population 1")
+ax.plot(test2, label="Population 2")
 plt.yscale('log')
 plt.xlabel("Iteration")
 plt.ylabel("besty Value")
