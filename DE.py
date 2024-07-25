@@ -26,6 +26,8 @@ class Populacao:
         self.besty = float("inf")
         self.chosen_function = chosen_function
         self.comeback_bool = 0
+        self.comeback_size = 5
+        self.comeback_rate = 0.1
         self.initpop()
         
     
@@ -51,6 +53,15 @@ class Populacao:
         self.y_history.append(self.besty)
         self.x_history.append(self.bestx)
 
+    def comeback_mutation(self, x):
+        if len(self.x_history) >= self.comeback_size:
+            if np.random.random() < self.comeback_rate:
+                x = self.x_history[np.random.randint(
+                    len(self.x_history)-self.comeback_size-1,
+                    len(self.x_history)-1
+                )]
+        return x
+
     def evolve(self, ind):
         #choose four dudes
         chosen = np.random.permutation(self.size)
@@ -58,14 +69,13 @@ class Populacao:
         x1 = self.pop[ind]
         x2 = self.pop[chosen[1]]
         x3 = self.pop[chosen[2]]
-        if self.comeback_bool == 1:
-            if len(self.x_history) > 4:
-                if np.random.random() < 0.1:
-                    x3 = self.x_history[np.random.randint(
-                        len(self.x_history)-6,
-                        len(self.x_history)-1
-                    )]
         x4 = self.pop[chosen[3]]
+        if self.comeback_bool > 0:
+            x3 = self.comeback_mutation(x3)
+        if self.comeback_bool > 1:
+            x1 = self.comeback_mutation(x1)
+            x2 = self.comeback_mutation(x2)
+            x4 = self.comeback_mutation(x4)
         #mutate
         mutation = self.mutate(x1, x2, x3, x4)
         ymutation = funct(mutation, self.chosen_function)
@@ -93,8 +103,10 @@ class Populacao:
             self.y_history.append(self.besty)
             self.x_history.append(self.bestx)
 
-    def comeback(self):
-        self.comeback_bool = 1    
+    def comeback(self, size, rate, bool):
+        self.comeback_bool = bool 
+        self.comeback_size = size  
+        self.comeback_rate = rate 
 
     #prints a line for each individual (with d elements)
     def __str__(self):
@@ -105,31 +117,30 @@ class Populacao:
             strvalue += "\n"
         return strvalue
 
-test1 = []
-for i in range(100):
-    pop1 = Populacao(0.8, 3, 50, 0.9, 1)
-    pop1.run(100)
-    test1.append(pop1.besty)
-
-test2 = []
-for i in range(100):
-    pop2 = Populacao(0.8, 3, 50, 0.9, 1)
-    pop2.comeback()
-    pop2.run(100)
-    test2.append(pop2.besty)
-test1.sort(reverse=True)
-test2.sort(reverse=True)
-
-print("\nran! besty =", pop1.besty, "\n")
+def test(comeback_size, comeback_rate, comeback_bool):
+    y_vector = []
+    for i in range(1000):
+        pop1 = Populacao(0.8, 3, 50, 0.9, 1)
+        pop1.comeback(comeback_size, comeback_rate, comeback_bool)
+        pop1.run(100)
+        y_vector.append(pop1.besty)
+    y_vector.sort(reverse=True)
+    return y_vector
 
 fig, ax = plt.subplots()
 
-ax.plot(test1, label="Population 1")
-ax.plot(test2, label="Population 2")
+ax.plot(test(5, 0.1, 1), label="size=5,rate=10%,only x3")
+ax.plot(test(5, 0.05, 1), label="size=5,rate=5%,only x3")
+ax.plot(test(10, 0.1, 1), label="size=10,rate=10%,only x3")
+ax.plot(test(10, 0.05, 1), label="size=10,rate=5%,only x3")
+ax.plot(test(5, 0.1, 2), label="size=5,rate=10%,all")
+ax.plot(test(5, 0.05, 2), label="size=5,rate=5%,all")
+ax.plot(test(10, 0.1, 2), label="size=10,rate=10%,all")
+ax.plot(test(10, 0.05, 2), label="size=10,rate=5%,all")
 plt.yscale('log')
 plt.xlabel("Iteration")
-plt.ylabel("besty Value")
-plt.title("Differential Evolution")
+plt.ylabel("best y value")
+plt.title("Differential Evolution: Quadratic")
 plt.legend()
 plt.show()
 
