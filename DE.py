@@ -129,6 +129,7 @@ def test(comeback_size, comeback_rate, comeback_bool):
 
 fig, ax = plt.subplots()
 
+ax.plot(test(5, 0, 1), label="classic - no comeback")
 ax.plot(test(5, 0.1, 1), label="size= 5,rate=10%,only x3")
 ax.plot(test(5, 0.05, 1), label="size= 5,rate= 5%,only x3")
 ax.plot(test(10, 0.1, 1), label="size=10,rate=10%,only x3")
