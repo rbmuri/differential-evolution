@@ -2,17 +2,13 @@ import numpy as np
 import matplotlib as mpl 
 import matplotlib.pyplot as plt
 from funct import *
+import time
+import datetime
 
-chosen_function = 3
-
-def crossover(CR, n):
-    v= np.array()
-    for i in range(n):
-        if np.random.random() < CR:
-            v.append(1)
-        else:
-            v.append(0)
-    return v
+class Individuo:
+    def __init__(self, x, funcao):
+        self.x = x
+        self.y = funct(x, funcao)
 
 class Populacao:
     def __init__(self, f, functiondim, popsize, crossover_rate, chosen_function):
@@ -30,7 +26,6 @@ class Populacao:
         self.comeback_rate = 0.1
         self.initpop()
         
-    
     def mutate(self, x1, x2, x3, x4):
         res = np.copy(x1)
         for i in range(len(x1)):
@@ -120,16 +115,20 @@ class Populacao:
 def test(comeback_size, comeback_rate, comeback_bool):
     y_vector = []
     for i in range(100):
-        pop1 = Populacao(0.8, 3, 50, 0.9, 1)
+        pop1 = Populacao(0.8, 10, 50, 0.9, 3)
         pop1.comeback(comeback_size, comeback_rate, comeback_bool)
-        pop1.run(50)
+        pop1.run(100)
         y_vector.append(pop1.besty)
     y_vector.sort(reverse=True)
     return y_vector
 
 fig, ax = plt.subplots()
-
+now = datetime.datetime.now()
+print("start time:", now)
+start = time.time()
 ax.plot(test(5, 0, 1), label="classic - no comeback")
+end = time.time()
+print("estimated duration:", (end - start)*9)
 ax.plot(test(5, 0.1, 1), label="size= 5,rate=10%,only x3")
 ax.plot(test(5, 0.05, 1), label="size= 5,rate= 5%,only x3")
 ax.plot(test(10, 0.1, 1), label="size=10,rate=10%,only x3")
@@ -138,6 +137,8 @@ ax.plot(test(5, 0.1, 2), label="size= 5,rate=10%,all")
 ax.plot(test(5, 0.05, 2), label="size= 5,rate= 5%,all")
 ax.plot(test(10, 0.1, 2), label="size=10,rate=10%,all")
 ax.plot(test(10, 0.05, 2), label="size=10,rate= 5%,all")
+
+
 plt.yscale('log')
 plt.xlabel("Iteration")
 plt.ylabel("best y value")

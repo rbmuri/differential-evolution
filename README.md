@@ -21,3 +21,4 @@ individuos, escolher o x3 (x4-x3) das ultimas geracoes
 - teste 2: 5 geracoes ou 10
 - teste 3: melhor de cada geracao ou 5 melhores
 - teste 4: 10% ou 5% ou outros
+- teste novo: (x4-x3) comparar o x4 com o x3 e trocar se x4 for menor que x3
