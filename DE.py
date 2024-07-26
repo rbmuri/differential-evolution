@@ -119,28 +119,28 @@ class Populacao:
 
 def test(comeback_size, comeback_rate, comeback_bool):
     y_vector = []
-    for i in range(1000):
+    for i in range(100):
         pop1 = Populacao(0.8, 3, 50, 0.9, 1)
         pop1.comeback(comeback_size, comeback_rate, comeback_bool)
-        pop1.run(100)
+        pop1.run(50)
         y_vector.append(pop1.besty)
     y_vector.sort(reverse=True)
     return y_vector
 
 fig, ax = plt.subplots()
 
-ax.plot(test(5, 0.1, 1), label="size=5,rate=10%,only x3")
-ax.plot(test(5, 0.05, 1), label="size=5,rate=5%,only x3")
+ax.plot(test(5, 0.1, 1), label="size= 5,rate=10%,only x3")
+ax.plot(test(5, 0.05, 1), label="size= 5,rate= 5%,only x3")
 ax.plot(test(10, 0.1, 1), label="size=10,rate=10%,only x3")
-ax.plot(test(10, 0.05, 1), label="size=10,rate=5%,only x3")
-ax.plot(test(5, 0.1, 2), label="size=5,rate=10%,all")
-ax.plot(test(5, 0.05, 2), label="size=5,rate=5%,all")
+ax.plot(test(10, 0.05, 1), label="size=10,rate= 5%,only x3")
+ax.plot(test(5, 0.1, 2), label="size= 5,rate=10%,all")
+ax.plot(test(5, 0.05, 2), label="size= 5,rate= 5%,all")
 ax.plot(test(10, 0.1, 2), label="size=10,rate=10%,all")
-ax.plot(test(10, 0.05, 2), label="size=10,rate=5%,all")
+ax.plot(test(10, 0.05, 2), label="size=10,rate= 5%,all")
 plt.yscale('log')
 plt.xlabel("Iteration")
 plt.ylabel("best y value")
-plt.title("Differential Evolution: Quadratic")
+plt.title("Differential Evolution: Rosenbrock")
 plt.legend()
 plt.show()
 
