@@ -5,7 +5,7 @@ from funct import *
 import time
 import datetime
 
-class Individuo:
+class Agente:
     def __init__(self, x, funcao):
         self.x = x
         self.y = funct(x, funcao)
@@ -31,6 +31,11 @@ class Populacao:
         for i in range(len(x1)):
             if np.random.random() < self.cr:
                 res[i] = x2[i] + self.f * (x4[i] - x3[i])
+
+            #THIS IS WRONG, FIX IT. SHOULD BE Y VALUE
+            if self.comeback_bool > 2:
+                if x4[i] < x3[i]:
+                    res[i] = x2[i] + self.f * (x3[i] - x4[i])
         return res
 
     def update_y(self):
@@ -71,6 +76,7 @@ class Populacao:
             x1 = self.comeback_mutation(x1)
             x2 = self.comeback_mutation(x2)
             x4 = self.comeback_mutation(x4)
+
         #mutate
         mutation = self.mutate(x1, x2, x3, x4)
         ymutation = funct(mutation, self.chosen_function)
@@ -115,9 +121,9 @@ class Populacao:
 def test(comeback_size, comeback_rate, comeback_bool):
     y_vector = []
     for i in range(100):
-        pop1 = Populacao(0.8, 10, 50, 0.9, 3)
+        pop1 = Populacao(0.8, 10, 50, 0.9, 4)
         pop1.comeback(comeback_size, comeback_rate, comeback_bool)
-        pop1.run(100)
+        pop1.run(200)
         y_vector.append(pop1.besty)
     y_vector.sort(reverse=True)
     return y_vector
@@ -128,16 +134,10 @@ print("start time:", now)
 start = time.time()
 ax.plot(test(5, 0, 1), label="classic - no comeback")
 end = time.time()
-print("estimated duration:", (end - start)*9)
-ax.plot(test(5, 0.1, 1), label="size= 5,rate=10%,only x3")
-ax.plot(test(5, 0.05, 1), label="size= 5,rate= 5%,only x3")
-ax.plot(test(10, 0.1, 1), label="size=10,rate=10%,only x3")
-ax.plot(test(10, 0.05, 1), label="size=10,rate= 5%,only x3")
-ax.plot(test(5, 0.1, 2), label="size= 5,rate=10%,all")
-ax.plot(test(5, 0.05, 2), label="size= 5,rate= 5%,all")
-ax.plot(test(10, 0.1, 2), label="size=10,rate=10%,all")
-ax.plot(test(10, 0.05, 2), label="size=10,rate= 5%,all")
-
+duration = (end - start) * 3
+print("end time:  ", (now + datetime.timedelta(seconds=duration)))
+ax.plot(test(5, 0.1, 2), label="current best - comeback")
+ax.plot(test(5, 0.1, 3), label="x4 - x3 -> x4 > x3")
 
 plt.yscale('log')
 plt.xlabel("Iteration")
