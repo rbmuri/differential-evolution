@@ -6,7 +6,7 @@ import time
 import datetime
 
 class Agente:
-    def __init__(self, x=None, funcao=None, type="default"):
+    def __init__(self, x=None, funcao=None):
         if x is not None and funcao is not None:
             self.x = x
             self.funcao = funcao
@@ -17,6 +17,18 @@ class Agente:
     def update(self, x):
         self.x = x
         self.y = funct(x, self.funcao)
+    def update(self):
+        self.y = funct(self.x, self.funcao)
+
+    def is_equal(self, agent):
+        for i in range(len(self.x)):
+            if (agent.x[i] != self.x[i]):
+                return False
+        return True
+    
+    def copy(self, agent):
+        self.x = agent.x
+        self.y = agent.y
 
 class Populacao:
     def __init__(self, f, functiondim, popsize, crossover_rate, chosen_function):
@@ -26,7 +38,7 @@ class Populacao:
         self.dim = functiondim
         self.size = popsize
         self.cr = crossover_rate
-        self.best = Agente(type="default")
+        self.best = Agente()
         self.chosen_function = chosen_function
         self.comeback_bool = 0
         self.comeback_size = 5
@@ -34,19 +46,17 @@ class Populacao:
         self.initpop()
         
     def mutate(self, x1, x2, x3, x4):
-        res = Agente(x1.x, self.chosen_function)
+        res = x1.x.copy()
         for i in range(len(x1.x)):
             if np.random.random() < self.cr:
-                res.x[i] = x2.x[i] + self.f * (x4.x[i] - x3.x[i])
-                res.update(res.x)
+                res[i] = x2.x[i] + self.f * (x4.x[i] - x3.x[i])
 
-            #THIS IS WRONG, FIX IT. SHOULD BE Y VALUE
             if self.comeback_bool > 2:
                 if x4.y < x3.y:
-                    res.x[i] = x2.x[i] + self.f * (x3.x[i] - x4.x[i])
-                    res.update(res.x)
+                    res[i] = x2.x[i] + self.f * (x3.x[i] - x4.x[i])
         
-        return res
+        return Agente(res, self.chosen_function)
+        
 
     def update_y(self):
         #calculate function results for each
