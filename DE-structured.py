@@ -133,8 +133,8 @@ class Populacao:
 
 def test(comeback_size, comeback_rate, comeback_bool):
     y_vector = []
-    for i in range(100):
-        pop1 = Populacao(0.8, 3, 50, 0.9, 1)
+    for i in range(5000):
+        pop1 = Populacao(0.8, 3, 50, 0.9, 3)
         pop1.comeback(comeback_size, comeback_rate, comeback_bool)
         pop1.run(50)
         y_vector.append(pop1.best.y)
@@ -150,12 +150,12 @@ end = time.time()
 duration = (end - start) * 3
 print("end time:  ", (now + datetime.timedelta(seconds=duration)))
 ax.plot(test(5, 0.1, 2), label="current best - comeback")
-ax.plot(test(5, 0.1, 3), label="x4 - x3 -> x4 > x3")
+ax.plot(test(5, 0.1, 3), label="alternative - x4 > x3")
 
 plt.yscale('log')
 plt.xlabel("Iteration")
 plt.ylabel("best y value")
-plt.title("Differential Evolution: Rosenbrock")
+plt.title("Differential Evolution: Rosenbrock Function")
 plt.legend()
 plt.show()
 
