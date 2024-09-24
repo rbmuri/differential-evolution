@@ -6,7 +6,7 @@ qual é melhor _(leandro e henrique?)_
 - não adaptar N (provavelmente a pior)
 - mudar deterministicamente
 - adaptar comparando duas populações
-    - N, 2N
+    - N, 2N (10, 20) (15, 30) (20, 40)
     - N, N+10  
 - **estagnação** _(sasawork?)_
     - minimo local
@@ -21,4 +21,6 @@ individuos, escolher o x3 (x4-x3) das ultimas geracoes
 - teste 2: 5 geracoes ou 10
 - teste 3: melhor de cada geracao ou 5 melhores
 - teste 4: 10% ou 5% ou outros
-- teste novo: (x4-x3) comparar o x4 com o x3 e trocar se x4 for menor que x3
+- teste novo: (x4-x3) comparar o x4 com o x3 e trocar se x4 for menor que 
+
+se o algoritmo estiver indo lento, aumentar a diversidade / tamanho da populacao. se estiver indo rapido, diminuir a populacao para economizar

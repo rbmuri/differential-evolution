@@ -11,6 +11,9 @@ class Agente:
             self.x = x
             self.funcao = funcao
             self.y = funct(x, funcao)
+            self.ind = -1
+        elif (x == -1):
+            self.y = 0
         else:
             self.y = float("inf")
     
@@ -25,6 +28,10 @@ class Agente:
             if (agent.x[i] != self.x[i]):
                 return False
         return True
+    def __gt__(self, agent):
+        if (self.y > agent.y):
+            return True
+        return False
     
     def copy(self, agent):
         self.x = agent.x
@@ -39,6 +46,7 @@ class Populacao:
         self.size = popsize
         self.cr = crossover_rate
         self.best = Agente()
+        self.worst = Agente(-1)
         self.chosen_function = chosen_function
         self.comeback_bool = 0
         self.comeback_size = 5
@@ -54,14 +62,16 @@ class Populacao:
             if self.comeback_bool > 2:
                 if x4.y < x3.y:
                     res[i] = x2.x[i] + self.f * (x3.x[i] - x4.x[i])
-        
-        return Agente(res, self.chosen_function)
+        mutation = Agente(res, self.chosen_function)
+        mutation.ind = x1.ind
+        return mutation
         
 
     def update_y(self):
         #calculate function results for each
         for i in range(len(self.pop_raw)):
             agent = Agente(self.pop_raw[i], self.chosen_function)
+            agent.ind = len(self.pop)
             self.pop.append(agent)
             if agent.y < self.best.y:
                 self.best = agent
@@ -98,11 +108,15 @@ class Populacao:
         #mutate
         mutation = self.mutate(x1, x2, x3, x4)
 
-        if mutation.y < self.pop[ind].y:
+        if mutation.y < x1.y:
             self.pop[ind] = mutation
             #update besty
             if mutation.y < self.best.y:
                 self.best = mutation
+            if mutation.y > self.worst.y:
+                self.worst = mutation
+        elif x1.y > self.worst.y:
+            self.worst = x1
 
     def run(self, time):
         for t in range(time):
@@ -111,10 +125,20 @@ class Populacao:
             self.history.append(self.best)
 
     def multirun(self, time):
-        self.secondpop = Populacao(self.f, self.dim, self.size, self.cr)
+        secondpop = Populacao(self.f, self.dim, (2*self.size), self.cr, self.chosen_function)
         for t in range(time):
+            self.worst = Agente(-1)
+            secondpop.worst = Agente(-1)
             for i in range(self.size):
                 self.evolve(i)
+                secondpop.evolve(i)
+            if (self.best > secondpop.best):
+                secondpop.pop[secondpop.worst.ind] = self.best
+                secondpop.pop[secondpop.worst.ind].ind = secondpop.worst.ind
+            else:
+                self.pop[self.worst.ind] = secondpop.best
+                self.pop[self.worst.ind].ind = self.worst.ind
+                self.best = secondpop.best
             self.history.append(self.best)
 
     def comeback(self, size, rate, bool):
@@ -133,10 +157,10 @@ class Populacao:
 
 def test(comeback_size, comeback_rate, comeback_bool):
     y_vector = []
-    for i in range(5000):
-        pop1 = Populacao(0.8, 3, 50, 0.9, 3)
+    for i in range(100):
+        pop1 = Populacao(0.8, 3, 20, 0.9, 1)
         pop1.comeback(comeback_size, comeback_rate, comeback_bool)
-        pop1.run(50)
+        pop1.multirun(50)
         y_vector.append(pop1.best.y)
     y_vector.sort(reverse=True)
     return y_vector
