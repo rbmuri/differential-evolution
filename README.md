@@ -24,3 +24,9 @@ individuos, escolher o x3 (x4-x3) das ultimas geracoes
 - teste novo: (x4-x3) comparar o x4 com o x3 e trocar se x4 for menor que 
 
 se o algoritmo estiver indo lento, aumentar a diversidade / tamanho da populacao. se estiver indo rapido, diminuir a populacao para economizar
+
+VALORES RECOMENDADOS
+pop = 5*dim
+f = random num 0-1
+CR = random num 0-1 (?)
+
