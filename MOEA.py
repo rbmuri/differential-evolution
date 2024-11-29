@@ -1,3 +1,5 @@
+from random import random
+
 class Individual:
     def __init__(self, x, y):
         self.x = x
@@ -6,23 +8,55 @@ class Individual:
         self.dominated_solutions = []
         
     def dom(self, count):
-        self.domination_count += count
+        self.domination_count = count
 
-def pareto_optimal_set(population):
+    def __lt__(self, other):
+        # First compare y in descending order
+        if self.y != other.y:
+            return self.y > other.y
+        # Use x in ascending order as a tiebreaker
+        return self.x > other.x
+    
+    def __repr__(self):
+        return f"Individual(x={self.x}, y={self.y})"
+
+def pocalculate(population, dominance):
     """
     This function takes a population of individuals and returns the set of non-dominated individuals.
     """
-    pareto_optimal_set = []
-    population.sort(reverse=True)
+    poset = []
+    population.sort(reverse=True) # sort in relation to y
     bestx = float("inf")
-    for i in range(len(population)):
+    subpop = []
+    for i in population:
         if i.x < bestx:
             bestx = i.x
-        while population[i+1].y == population[i].y:
-            population[i].dominate(0)
+            i.dom(dominance)
+            poset.append(i)
+        else:
+            subpop.append(i)
+    for i in poset:
+        print(i)
+    return subpop
 
-        
+pop = []     
+# for i in range(20):
+#     pop.append(Individual(random(), random()))
+pop.append(Individual(1, 2))
+pop.append(Individual(2, 2))
+pop.append(Individual(2, 1))
+pop.append(Individual(3, 3))
+#pocalculate(pop, 0)
+i = 0
+while True:
+    if not pop: break
+    print("SUBSET ", i, "/n")
+    pop = pocalculate(pop, i)
+    i = i + 1
 
+
+
+"""
     pareto_optimal_set = []
     for i in range(len(population)):
         dominated = False
@@ -33,3 +67,4 @@ def pareto_optimal_set(population):
         if not dominated:
             pareto_optimal_set.append(population[i])
     return pareto_optimal_set
+"""
