@@ -7,7 +7,7 @@ def test(f, pop, cr, gen):
         pop1 = Populacao(f, 30, pop, cr, 1)
         pop1.comeback(5, 0.1, 2)
         pop1.run(gen)
-        y_vector.append(pop1.best.y)
+        y_vector.append(pop1.pop[0])
     y_vector.sort(reverse=True)
     print("TEST: F: ", f, "- POP: ", pop, "- CR: ", cr, "MEDIAN: ", np.median(y_vector))
     return y_vector

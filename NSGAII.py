@@ -9,24 +9,24 @@ import math
 import datetime
 
 #must come sorted
-def paretoOptimal(self, pop, rank):
-    range = len(pop[0].y)
-    lowest = [float("inf")] * num_objectives
+def paretoOptimal(self, pop, starting_rank):
+    range_n = len(pop.pop[0].y)
+    lowest = [float("inf")] * range_n
     pareto = []
     nonpareto = []
     out = True
-    for individual in pop:
+    for individual in pop.pop:
         if individual.rank >= 0:
             continue
         for i in range(len(individual.y)):
-            if individual[i] < lowest[i]:
-                individual.rank(rank)
-                lowest[i] = individual[i]
+            if individual.y[i] < lowest[i]:
+                individual.rankme(starting_rank)
+                lowest[i] = individual.y[i]
                 out = False
                 break
             
     if out: return
-    paretoOptimal(self, pop, rank+1)
+    paretoOptimal(self, pop, starting_rank+1)
 
 def crowdingDistance(self, pareto):
     distances = []
@@ -43,6 +43,8 @@ def crowdingDistance(self, pareto):
 
 class Agente:
     def __init__(self, x=None, funcao=None):
+        if x is None or funcao is None:
+            print(x + " and " + funcao)
         if x is not None and funcao is not None:
             self.x = x
             self.funcao = funcao
@@ -62,8 +64,8 @@ class Agente:
         self.y = multifunct(self.x, self.funcao)
 
 
-    def rank(self, x):
-        self.rank = (x, float("inf"))
+    def rankme(self, x):
+        self.rank = x
     def crowd(self, x):
         self.rank[1] = (x)
 
@@ -81,25 +83,29 @@ class Agente:
         self.x = agent.x
         self.y = agent.y
 
+    def __str__(self):
+        strvalue = ""
+        for y in self.x:
+            strvalue += "(" + str(y) + "), "
+        strvalue += "\n"
+        return strvalue
+
 class Populacao:
     def __init__(self, f, functiondim, popsize, crossover_rate, chosen_function):
         self.pop = []
+        self.mutatedpop = []
         self.rank = []
         self.history = []
         self.f = f
         self.dim = functiondim
         self.size = popsize
         self.cr = crossover_rate
-        self.best = Agente()
-        self.worst = Agente(-1)
         self.chosen_function = chosen_function
         self.comeback_bool = 0
         self.comeback_size = 5
         self.comeback_rate = 0.1
         self.initpop()
-    
-    def sort(self):
-        pop = sorted(pop) 
+
 
 
 #    def updaterank(self):
@@ -129,13 +135,12 @@ class Populacao:
             agent = Agente(self.pop_raw[i], self.chosen_function)
             agent.ind = len(self.pop)
             self.pop.append(agent)
-            if agent.y < self.best.y:
-                self.best = agent
+#            if agent.y < self.best.y:
+#                self.best = agent
 
     def initpop(self):
         self.pop_raw = np.random.random((self.size, self.dim))
         self.update_y()
-        self.history.append(self.best)
 
     def comeback_mutation(self, x):
         if len(self.history) >= self.comeback_size:
@@ -163,22 +168,23 @@ class Populacao:
 
         #mutate
         mutation = self.mutate(x1, x2, x3, x4)
-
-        if mutation.y < x1.y:
-            self.pop[ind] = mutation
-            #update besty
-            if mutation.y < self.best.y:
-                self.best = mutation
-            if mutation.y > self.worst.y:
-                self.worst = mutation
-        elif x1.y > self.worst.y:
-            self.worst = x1
+        self.mutatedpop.append(mutation)
+#        if mutation.y < x1.y:
+#            self.pop[ind] = mutation
+#            #update besty
+#            if mutation.y < self.best.y:
+#                self.best = mutation
+#            if mutation.y > self.worst.y:
+#                self.worst = mutation
+#        elif x1.y > self.worst.y:
+#            self.worst = x1
 
     def run(self, time):
         for t in range(time):
             for i in range(self.size):
                 self.evolve(i)
-            self.history.append(self.best)
+            #self.history.append(self.best)
+        self.darwinism()
 
     def multirun(self, time):
         secondpop = Populacao(self.f, self.dim, (2*self.size), self.cr, self.chosen_function)
@@ -201,6 +207,17 @@ class Populacao:
         self.comeback_bool = bool 
         self.comeback_size = size  
         self.comeback_rate = rate 
+                
+
+    def darwinism(self):
+        self.pop = self.pop + self.mutatedpop
+        self.pop = sorted(self.pop, key=lambda v: tuple(v.x))
+        
+        paretoOptimal(self, self, 0)
+        self.pop = sorted(self.pop, key=lambda v: v.rank)
+        self.pop = self.pop[slice(self.size)]
+        #self.best = self.pop[0]
+
 
     #prints a line for each individual (with d elements)
     def __str__(self):
