@@ -9,25 +9,24 @@ import math
 import datetime
 
 #must come sorted
-def paretoOptimal(self, pop):
+def paretoOptimal(self, pop, rank):
     range = len(pop[0].y)
-    lowest = []
+    lowest = [float("inf")] * num_objectives
     pareto = []
     nonpareto = []
-    out = False
-    rank = 0
-    for i in range(range):
-        lowest[i] = float("inf")
+    out = True
     for individual in pop:
+        if individual.rank >= 0:
+            continue
         for i in range(len(individual.y)):
             if individual[i] < lowest[i]:
                 individual.rank(rank)
                 lowest[i] = individual[i]
-                out = True
+                out = False
                 break
-        
-    results = nonpareto
-    return pareto
+            
+    if out: return
+    paretoOptimal(self, pop, rank+1)
 
 def crowdingDistance(self, pareto):
     distances = []
@@ -39,9 +38,8 @@ def crowdingDistance(self, pareto):
                 lowest = dist
         distances[i] = lowest
         return distances
-       
 
-        
+
 
 class Agente:
     def __init__(self, x=None, funcao=None):
@@ -51,6 +49,7 @@ class Agente:
             self.y = multifunct(x, funcao)
             self.ind = -1
             self.evaluated = False
+            self.rank = -1
         elif (x == -1):
             self.y = 0
         else:
@@ -102,12 +101,13 @@ class Populacao:
     def sort(self):
         pop = sorted(pop) 
 
-    def updaterank(self):
-        popcopy = self.pop.copy()
-        rank = 0
-        while len(self.popcopy) > 0:
-            pareto = paretoOptimal(popcopy) 
-            for i in pareto:   
+
+#    def updaterank(self):
+#        popcopy = self.pop.copy()
+#        rank = 0
+#        while len(self.popcopy) > 0:
+#            pareto = paretoOptimal(popcopy) 
+#            for i in pareto:                   
 
     def mutate(self, x1, x2, x3, x4):
         res = x1.x.copy()
