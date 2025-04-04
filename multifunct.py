@@ -57,7 +57,8 @@ def matpi(n):
     a = ''
 
     for i in range(1, npi + 1):
-        a += '{:.{}}'.format(math.pi ** i, 17)
+        # a += '{:.{}}'.format(math.pi ** i, 17)
+        a += '{:.{}}'.format(math.pi ** i, 17).replace('e', '').replace('+', '').replace('-', '')
 
 
     a = a.replace('.', '')
