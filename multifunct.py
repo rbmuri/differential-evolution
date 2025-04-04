@@ -8,7 +8,7 @@ problem = get_problem("zdt1")
 def multifunct(x, fun):
 
     n = len(x)
-##    Q = matpi(n)
+    Q = matpi(n)
 
     if fun == 1:  # ZDT1
         problem = get_problem("zdt1")
