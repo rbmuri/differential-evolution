@@ -9,7 +9,7 @@ import math
 import datetime
 
 #must come sorted
-def paretoOptimal(self, pop, starting_rank):
+def paretoOptimal(pop, starting_rank):
     range_n = len(pop.pop[0].y)
     lowest = [float("inf")] * range_n
     pareto = []
@@ -26,9 +26,9 @@ def paretoOptimal(self, pop, starting_rank):
                 break
             
     if out: return
-    paretoOptimal(self, pop, starting_rank+1)
+    paretoOptimal(pop, starting_rank+1)
 
-def crowdingDistance(self, pareto):
+def crowdingDistance(pareto):
     distances = []
     for i in pareto:
         lowest = float("inf")
@@ -180,11 +180,13 @@ class Populacao:
 #            self.worst = x1
 
     def run(self, time):
+
         for t in range(time):
             for i in range(self.size):
                 self.evolve(i)
+            self.darwinism()
             #self.history.append(self.best)
-        self.darwinism()
+        
 
     def multirun(self, time):
         secondpop = Populacao(self.f, self.dim, (2*self.size), self.cr, self.chosen_function)
@@ -211,9 +213,11 @@ class Populacao:
 
     def darwinism(self):
         self.pop = self.pop + self.mutatedpop
-        self.pop = sorted(self.pop, key=lambda v: tuple(v.x))
+        for i in self.pop:
+            i.rank = -1
+        self.pop = sorted(self.pop, key=lambda v: tuple(v.y))
         
-        paretoOptimal(self, self, 0)
+        paretoOptimal(self, 0)
         self.pop = sorted(self.pop, key=lambda v: v.rank)
         self.pop = self.pop[slice(self.size)]
         #self.best = self.pop[0]

@@ -2,7 +2,7 @@ from NSGAII import *
 
 def test(f, pop, cr, gen):
     y_vector = []
-    for i in range(1000):
+    for i in range(100):
         # f = 0.8 pop = 50 cr = 0.9
         pop1 = Populacao(f, 30, pop, cr, 1)
         pop1.comeback(5, 0.1, 2)

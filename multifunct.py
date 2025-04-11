@@ -10,6 +10,13 @@ def multifunct(x, fun):
     n = len(x)
 ##    Q = matpi(n)
 
+    if fun == 0:
+        y = [
+         4*x[0]**2 + 4*x[1]**2 ,
+         (x[0]-5)**2 + (x[1]-5)**2
+        ]
+        return y
+
     if fun == 1:  # ZDT1
         problem = get_problem("zdt1")
         return problem.evaluate(x)
