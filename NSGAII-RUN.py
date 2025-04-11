@@ -30,9 +30,9 @@ endtimek = 0
 
 
 plt.yscale('log')
-plt.xlabel("Iteration")
-plt.ylabel("best y value")
-plt.title("Differential Evolution: Rosenbrock Function")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.title("Pareto Optimal")
 plt.legend()
 plt.show()
 
