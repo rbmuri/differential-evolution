@@ -8,6 +8,7 @@ import time
 import math
 import datetime
 
+
 #must come sorted
 def paretoOptimal(pop, starting_rank):
     range_n = len(pop.pop[0].y)

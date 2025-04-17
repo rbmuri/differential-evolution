@@ -4,7 +4,7 @@ def test(f, pop, cr, gen):
     y_vector = []
     for i in range(1):
         # f = 0.8 pop = 50 cr = 0.9
-        pop1 = Populacao(f, 30, pop, cr, 0)
+        pop1 = Populacao(f, 2, pop, cr, 10)
         pop1.comeback(5, 0.1, 2)
         pop1.run(gen)
         for j in range(len(pop1.pop)):
@@ -25,6 +25,8 @@ now = datetime.datetime.now()
 print("start time:", now)
 start = time.time()
 endtimek = 0
+
+scoring()
 
 
 
