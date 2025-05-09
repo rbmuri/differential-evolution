@@ -8,6 +8,7 @@ import time
 import math
 import datetime
 
+
 #must come sorted
 #apparently wrong??
 def paretoOptimal(pop, starting_rank):

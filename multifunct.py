@@ -2,10 +2,14 @@ import numpy as np
 import math
 from pymoo.problems import get_problem
 from pymoo.util.plotting import plot
+import atexit
 
 problem = get_problem("zdt1")
+score = 0
 
 def multifunct(x, fun):
+    global score
+    score = score +1
 
     n = len(x)
     Q = matpi(n)
@@ -16,6 +20,10 @@ def multifunct(x, fun):
          (x[0]-5)**2 + (x[1]-5)**2
         ]
         return y
+    
+    elif fun == 10:
+        problem = get_problem("bnh")
+        return problem.evaluate(x)
 
     if fun == 1:  # ZDT1
         problem = get_problem("zdt1")
@@ -57,6 +65,8 @@ def multifunct(x, fun):
 
         return y
 
+def scoring():
+    print("SCORE: ", score)
 
 def matpi(n):
 

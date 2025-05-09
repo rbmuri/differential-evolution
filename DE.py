@@ -7,6 +7,7 @@ from funct import *
 import time
 import datetime
 
+#agente, individuo, pontos, etc
 class Agente:
     def __init__(self, x=None, funcao=None):
         if x is not None and funcao is not None:
