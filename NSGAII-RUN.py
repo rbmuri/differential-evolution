@@ -4,7 +4,7 @@ def test(f, pop, cr, gen):
     y_vector = []
     for i in range(1):
         # f = 0.8 pop = 50 cr = 0.9
-        pop1 = Populacao(f, 30, pop, cr, 0)
+        pop1 = Populacao(f, 2, pop, cr, 0)
         pop1.comeback(5, 0.1, 2)
         pop1.run(gen)
         for j in range(len(pop1.pop)):
@@ -13,14 +13,15 @@ def test(f, pop, cr, gen):
             if pop1.pop[j].rank > 0:
                 break
     print("TEST: F: ", f, "- POP: ", pop, "- CR: ", cr, "MEDIAN: ")
-    return y_vector
+    res = sorted(y_vector)
+    return res
 
 ys = test(0.8, 50, 0.9, 100)
 
 
 fig, ax = plt.subplots()
 x_vals, y_vals = zip(*ys)
-ax.plot(x_vals, y_vals, color='blue', marker='o')
+ax.scatter(x_vals, y_vals, color='blue', marker='o', label='Pareto Points')
 now = datetime.datetime.now()
 print("start time:", now)
 start = time.time()
@@ -29,7 +30,7 @@ endtimek = 0
 
 
 
-plt.yscale('log')
+#plt.yscale('log')
 plt.xlabel("X")
 plt.ylabel("Y")
 plt.title("Pareto Optimal")

@@ -9,35 +9,46 @@ import math
 import datetime
 
 #must come sorted
+#apparently wrong??
 def paretoOptimal(pop, starting_rank):
     range_n = len(pop.pop[0].y)
     lowest = [float("inf")] * range_n
-    pareto = []
-    nonpareto = []
     out = True
     for individual in pop.pop:
         if individual.rank >= 0:
             continue
-        for i in range(len(individual.y)):
-            if individual.y[i] < lowest[i]:
-                individual.rankme(starting_rank)
-                lowest[i] = individual.y[i]
-                out = False
-                break
+        else:
+            for i in range(len(individual.y)):
+                if individual.y[i] < lowest[i]:
+                    individual.rankme(starting_rank)
+                    lowest[i] = individual.y[i]
+                    out = False
             
     if out: return
     paretoOptimal(pop, starting_rank+1)
+    return
 
-def crowdingDistance(pareto):
-    distances = []
-    for i in pareto:
-        lowest = float("inf")
-        for j in pareto:
-            dist = math.dist(i, j)
-            if dist < lowest:
-                lowest = dist
-        distances[i] = lowest
-        return distances
+def crowdingDistance(pop):
+    sorted_dimensions = []
+    var = 0
+    for y in pop.pop[0].y:
+        sorted_dimensions.append(sorted(pop.pop, key=lambda v: v.y[var]))
+        var = var + 1
+    var = 0
+    for list in sorted_dimensions:
+        prev = float('inf')
+        next = 0
+        for i in range(len(list)):
+            if i == len(list) - 1:
+                next = float('inf')  # No next element for the last item
+            else:
+                next = abs(list[i].y[var] - list[i + 1].y[var])
+            list[i].crowd += next + prev
+            prev = next
+        var = var + 1
+
+
+
 
 
 
@@ -52,6 +63,7 @@ class Agente:
             self.ind = -1
             self.evaluated = False
             self.rank = -1
+            self.crowd = -1
         elif (x == -1):
             self.y = 0
         else:
@@ -66,8 +78,6 @@ class Agente:
 
     def rankme(self, x):
         self.rank = x
-    def crowd(self, x):
-        self.rank[1] = (x)
 
     def is_equal(self, agent):
         for i in range(len(self.x)):
@@ -185,6 +195,10 @@ class Populacao:
             for i in range(self.size):
                 self.evolve(i)
             self.darwinism()
+            if (t<10):
+                for j in range(len(self.pop)):
+                    print(self.pop[j].y, " ", self.pop[j].rank)
+                print('done\n')
             #self.history.append(self.best)
         
 
@@ -218,8 +232,10 @@ class Populacao:
         self.pop = sorted(self.pop, key=lambda v: tuple(v.y))
         
         paretoOptimal(self, 0)
-        self.pop = sorted(self.pop, key=lambda v: v.rank)
+        crowdingDistance(self)
+        self.pop = sorted(self.pop, key=lambda v: (v.rank, -v.crowd))
         self.pop = self.pop[slice(self.size)]
+        self.mutatedpop = []
         #self.best = self.pop[0]
 
 
