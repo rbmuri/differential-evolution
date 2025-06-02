@@ -14,16 +14,19 @@ def multifunct(x, fun):
     n = len(x)
     Q = matpi(n)
 
-    if fun == 0:
+    if fun == 0: #bihn and korn
         y = [
          4*x[0]**2 + 4*x[1]**2 ,
          (x[0]-5)**2 + (x[1]-5)**2
         ]
         return y
-    
-    elif fun == 10:
-        problem = get_problem("bnh")
-        return problem.evaluate(x)
+        
+    elif fun == 10:  # Manual ZDT1
+        f1 = x[0]
+        g = 1 + 9 * np.sum(x[1:]) / (n - 1)
+        f2 = g * (1 - np.sqrt(f1 / g))
+        return [f1, f2]
+
 
     if fun == 1:  # ZDT1
         problem = get_problem("zdt1")

@@ -4,7 +4,7 @@ def test(f, pop, cr, gen):
     y_vector = []
     for i in range(1):
         # f = 0.8 pop = 50 cr = 0.9
-        pop1 = Populacao(f, 2, pop, cr, 0)
+        pop1 = Populacao(f, 30, pop, cr, 10)
         pop1.comeback(5, 0.1, 2)
         pop1.run(gen)
         for j in range(len(pop1.pop)):
@@ -16,7 +16,7 @@ def test(f, pop, cr, gen):
     res = sorted(y_vector)
     return res
 
-ys = test(0.8, 50, 0.9, 100)
+ys = test(0.8, 100, 0.9, 1000)
 
 
 fig, ax = plt.subplots()
