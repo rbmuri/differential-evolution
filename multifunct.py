@@ -3,9 +3,11 @@ import math
 from pymoo.problems import get_problem
 from pymoo.util.plotting import plot
 import atexit
+import os
 
 problem = get_problem("zdt1")
 score = 0
+
 
 def multifunct(x, fun):
     global score
@@ -14,21 +16,21 @@ def multifunct(x, fun):
     n = len(x)
     Q = matpi(n)
 
-    if fun == 0: #bihn and korn
+    if fun == "bnh": #bihn and korn
         y = [
          4*x[0]**2 + 4*x[1]**2 ,
          (x[0]-5)**2 + (x[1]-5)**2
         ]
         return y
         
-    elif fun == 10:  # Manual ZDT1
+    elif fun == "zdt1":  # Manual ZDT1
         f1 = x[0]
         g = 1 + 9 * np.sum(x[1:]) / (n - 1)
         f2 = g * (1 - np.sqrt(f1 / g))
         return [f1, f2]
 
 
-    if fun == 1:  # ZDT1
+    if fun == 10:  # ZDT1
         problem = get_problem("zdt1")
         return problem.evaluate(x)
     elif fun == 2: # Sphere function
@@ -68,8 +70,9 @@ def multifunct(x, fun):
 
         return y
 
-def scoring():
-    print("SCORE: ", score)
+def n_eval():
+    return score
+
 
 def matpi(n):
 
@@ -96,3 +99,16 @@ def matpi(n):
     M = M / np.linalg.norm(M, 2)
 
     return M
+
+def search_domain(mutation, fun):
+    if fun == "zdt1":
+        mutation = np.clip(mutation, 0.0, 1.0)
+        return mutation
+    else:
+        return mutation
+    
+def recorded_fronts(fun):
+    if fun == "zdt1":
+        file_path = os.path.join(os.path.dirname(__file__), "zdt1_front.txt")
+        data = np.loadtxt(file_path)
+        return data.tolist()

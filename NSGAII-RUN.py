@@ -4,7 +4,7 @@ def test(f, pop, cr, gen):
     y_vector = []
     for i in range(1):
         # f = 0.8 pop = 50 cr = 0.9
-        pop1 = Populacao(f, 30, pop, cr, 10)
+        pop1 = Populacao(f, 30, pop, cr, "zdt1")
         pop1.comeback(5, 0.1, 2)
         pop1.run(gen)
         for j in range(len(pop1.pop)):
@@ -13,10 +13,15 @@ def test(f, pop, cr, gen):
             if pop1.pop[j].rank > 0:
                 break
     print("TEST: F: ", f, "- POP: ", pop, "- CR: ", cr, "MEDIAN: ")
+#    with open("zdt1_front.txt", "w") as f:
+#        for row in pop1.pop:
+#            if row.rank == 0:
+#                line = " ".join(map(str, row.y))
+#                f.write(line + "\n")
     res = sorted(y_vector)
     return res
 
-ys = test(0.8, 100, 0.9, 1000)
+ys = test(0.8, 100, 0.9, 20000)
 
 
 fig, ax = plt.subplots()
@@ -27,7 +32,7 @@ print("start time:", now)
 start = time.time()
 endtimek = 0
 
-
+n_eval()
 
 
 #plt.yscale('log')

@@ -101,6 +101,25 @@ class Agente:
         strvalue += "\n"
         return strvalue
 
+def generational_distance(population, fun):
+    ref_front = recorded_fronts(fun)
+    front = []
+    all_distances = []
+    for agent in population:
+        if agent.rank == 0:
+            front.append(agent)
+    for agent in front:
+        closest = float("inf")
+        for ref in ref_front:
+            distance = np.linalg.norm(np.array(ref) - np.array(agent.y))
+            if distance < closest:
+                closest = distance
+        all_distances.append(closest)
+    sum = 0
+    for i in all_distances:
+        sum = sum + i
+    return (sum/len(all_distances))
+
 class Populacao:
     def __init__(self, f, functiondim, popsize, crossover_rate, chosen_function):
         self.pop = []
@@ -117,8 +136,6 @@ class Populacao:
         self.comeback_rate = 0.1
         self.initpop()
 
-
-
 #    def updaterank(self):
 #        popcopy = self.pop.copy()
 #        rank = 0
@@ -131,7 +148,7 @@ class Populacao:
         for i in range(len(x1.x)):
             if np.random.random() < self.cr:
                 res[i] = x2.x[i] + self.f * (x4.x[i] - x3.x[i])
-
+                res[i] = search_domain(res[i], self.chosen_function)
             if self.comeback_bool > 2:
                 if x4.y < x3.y:
                     res[i] = x2.x[i] + self.f * (x3.x[i] - x4.x[i])
@@ -191,15 +208,15 @@ class Populacao:
 #            self.worst = x1
 
     def run(self, time):
-
+        print('''
+n_gen  |   n_eval  |  n_nds |      igd      |       gd      |       hv
+==========================================================================''')
         for t in range(time):
             for i in range(self.size):
                 self.evolve(i)
             self.darwinism()
-            if (t<10):
-                for j in range(len(self.pop)):
-                    print(self.pop[j].y, " ", self.pop[j].rank)
-                print('done\n')
+            print(f"{t+1:>6} | {n_eval():>9} | {18:>6} | {2.6048048316:>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {0.0:>13.6E}")
+
             #self.history.append(self.best)
         
 

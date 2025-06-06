@@ -4,7 +4,7 @@ def test(f, pop, cr, gen):
     y_vector = []
     for i in range(100):
         # f = 0.8 pop = 50 cr = 0.9
-        pop1 = Populacao(f, 30, pop, cr, 1)
+        pop1 = Populacao(f, 30, pop, cr, "bnk")
         pop1.comeback(5, 0.1, 2)
         pop1.run(gen)
         y_vector.append(pop1.pop[0])
