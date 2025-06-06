@@ -4,12 +4,13 @@ def test(f, pop, cr, gen):
     y_vector = []
     for i in range(100):
         # f = 0.8 pop = 50 cr = 0.9
-        pop1 = Populacao(f, 30, pop, cr, "bnk")
+        pop1 = Populacao(f, 2, pop, cr, "bnh")
         pop1.comeback(5, 0.1, 2)
         pop1.run(gen)
         y_vector.append(pop1.pop[0])
     y_vector.sort(reverse=True)
-    print("TEST: F: ", f, "- POP: ", pop, "- CR: ", cr, "MEDIAN: ", np.median(y_vector))
+    try: print("TEST: F: ", f, "- POP: ", pop, "- CR: ", cr, "MEDIAN: ", np.median(y_vector))
+    except Exception as e: print("Collecting ideal front data.")
     return y_vector
 
 fig, ax = plt.subplots()

@@ -215,8 +215,8 @@ n_gen  |   n_eval  |  n_nds |      igd      |       gd      |       hv
             for i in range(self.size):
                 self.evolve(i)
             self.darwinism()
-            print(f"{t+1:>6} | {n_eval():>9} | {18:>6} | {2.6048048316:>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {0.0:>13.6E}")
-
+            try: print(f"{t+1:>6} | {n_eval():>9} | {18:>6} | {2.6048048316:>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {0.0:>13.6E}")
+            except Exception as e: print("Collecting ideal front data.")
             #self.history.append(self.best)
         
 

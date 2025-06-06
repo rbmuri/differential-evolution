@@ -30,3 +30,9 @@ pop = 5*dim
 f = random num 0-1
 CR = random num 0-1 (?)
 
+### fazer 
+
+operadores mutação e crossover
+
+
+

@@ -108,7 +108,7 @@ def search_domain(mutation, fun):
         return mutation
     
 def recorded_fronts(fun):
-    if fun == "zdt1":
-        file_path = os.path.join(os.path.dirname(__file__), "zdt1_front.txt")
-        data = np.loadtxt(file_path)
-        return data.tolist()
+    file_path = os.path.join(os.path.dirname(__file__), f"{fun}_front.txt")
+    data = np.loadtxt(file_path)
+    return data.tolist()
+    
