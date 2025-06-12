@@ -10,7 +10,6 @@ import datetime
 
 
 #must come sorted
-#apparently wrong??
 def paretoOptimal(pop, starting_rank):
     range_n = len(pop.pop[0].y)
     lowest = [float("inf")] * range_n

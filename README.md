@@ -35,4 +35,21 @@ CR = random num 0-1 (?)
 operadores mutação e crossover
 
 
+### COMO IMPLEMENTAR ALGORITMO NO PYMOO
+
+1. Fazer com que sua classe de algoritmo herde de pymoo.core.core.Algorithm
+
+2. Reimplementar "__init__" de forma que herde da classe pymoo.core.core.Algorithm
+
+3. Reimplementar "infill()" (retorno das soluções candidatas para serem avaliadas)
+de forma que herde da classe pymoo.core.core.Algorithm
+
+4. Reimplementar "advance()" (seleção) de forma que herde da classe pymoo.core.core.Algorithm
+
+5. Reimplementar "has_next()" (decisão de parada) de forma que herde da classe 
+pymoo.core.core.Algorithm
+
+6. Adaptar meus dados de entrada e saída para corresponder com as estruturas de dados do Pymoo
+
+
 
