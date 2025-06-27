@@ -7,6 +7,7 @@ from multifunct import *
 import time
 import math
 import datetime
+from pymoo.indicators.hv import HV
 
 
 #must come sorted
@@ -138,6 +139,27 @@ def inverted_gd(population, fun):
         sum = sum + i
     return (sum/len(all_distances))
 
+def n_nds(pop):
+    count = 0
+    for i in pop:
+        if i.rank == 0:
+            count = count + 1
+    return count
+
+def hv(pop):
+    paretofront = []
+    for i in pop:
+        if i.rank == 0:
+            paretofront.append(np.array(i.x))
+        # Reference point (must be worse than any point in F)
+    ref_point = np.array([1000, 1000])
+
+    # Initialize and calculate hypervolume
+    hv = HV(ref_point=ref_point)
+    hv_value = hv.do(paretofront)
+    return hv_value
+        
+
 class Populacao:
     def __init__(self, f, functiondim, popsize, crossover_rate, chosen_function):
         self.pop = []
@@ -233,7 +255,7 @@ n_gen  |   n_eval  |  n_nds |      igd      |       gd      |       hv
             for i in range(self.size):
                 self.evolve(i)
             self.darwinism()
-            try: print(f"{t+1:>6} | {n_eval():>9} | {18:>6} | {inverted_gd(self.pop, self.chosen_function):>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {0.0:>13.6E}")
+            try: print(f"{t+1:>6} | {n_eval():>9} | {n_nds(self.pop):>6} | {inverted_gd(self.pop, self.chosen_function):>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {0.0:>13.6E}")
             except Exception as e: print("Collecting ideal front data.")
             #self.history.append(self.best)
         
