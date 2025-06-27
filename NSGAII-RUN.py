@@ -10,7 +10,6 @@ def test(f, pop, cr, gen):
         pop1.comeback(5, 0.1, 2)
         pop1.run(gen)
         for j in range(len(pop1.pop)):
-            print(pop1.pop[j].y, " ", pop1.pop[j].rank)
             y_vector.append(pop1.pop[j].y)
             if pop1.pop[j].rank > 0:
                 break

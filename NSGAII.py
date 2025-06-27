@@ -153,7 +153,7 @@ def hv(pop):
             paretofront.append(np.array(i.x))
         # Reference point (must be worse than any point in F)
     ref_point = np.array([1000, 1000])
-
+    paretofront = np.array(paretofront)
     # Initialize and calculate hypervolume
     hv = HV(ref_point=ref_point)
     hv_value = hv.do(paretofront)
@@ -255,7 +255,7 @@ n_gen  |   n_eval  |  n_nds |      igd      |       gd      |       hv
             for i in range(self.size):
                 self.evolve(i)
             self.darwinism()
-            try: print(f"{t+1:>6} | {n_eval():>9} | {n_nds(self.pop):>6} | {inverted_gd(self.pop, self.chosen_function):>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {0.0:>13.6E}")
+            try: print(f"{t+1:>6} | {n_eval():>9} | {n_nds(self.pop):>6} | {inverted_gd(self.pop, self.chosen_function):>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {hv(self.pop):>13.6E}")
             except Exception as e: print("Collecting ideal front data.")
             #self.history.append(self.best)
         
