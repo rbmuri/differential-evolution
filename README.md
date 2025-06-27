@@ -51,5 +51,8 @@ pymoo.core.core.Algorithm
 
 6. Adaptar meus dados de entrada e saída para corresponder com as estruturas de dados do Pymoo
 
+# SBX -> simulated binary crossover!
+# mutação polinomial 
+
 
 
