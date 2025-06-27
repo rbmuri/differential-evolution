@@ -119,6 +119,25 @@ def generational_distance(population, fun):
         sum = sum + i
     return (sum/len(all_distances))
 
+def inverted_gd(population, fun):
+    ref_front = recorded_fronts(fun)
+    front = []
+    all_distances = []
+    for agent in population:
+        if agent.rank == 0:
+            front.append(agent)
+    for agent in ref_front:
+        closest = float("inf")
+        for ref in front:
+            distance = np.linalg.norm(np.array(ref.y) - np.array(agent))
+            if distance < closest:
+                closest = distance
+        all_distances.append(closest)
+    sum = 0
+    for i in all_distances:
+        sum = sum + i
+    return (sum/len(all_distances))
+
 class Populacao:
     def __init__(self, f, functiondim, popsize, crossover_rate, chosen_function):
         self.pop = []
@@ -214,7 +233,7 @@ n_gen  |   n_eval  |  n_nds |      igd      |       gd      |       hv
             for i in range(self.size):
                 self.evolve(i)
             self.darwinism()
-            try: print(f"{t+1:>6} | {n_eval():>9} | {18:>6} | {2.6048048316:>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {0.0:>13.6E}")
+            try: print(f"{t+1:>6} | {n_eval():>9} | {18:>6} | {inverted_gd(self.pop, self.chosen_function):>13.10f} | {generational_distance(self.pop, self.chosen_function):>13.10f} | {0.0:>13.6E}")
             except Exception as e: print("Collecting ideal front data.")
             #self.history.append(self.best)
         

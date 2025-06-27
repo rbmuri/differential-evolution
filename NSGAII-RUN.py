@@ -24,7 +24,7 @@ def test(f, pop, cr, gen):
     res = sorted(y_vector)
     return res
 
-ys = test(0.8, 100, 0.9, 20000)
+ys = test(0.8, 100, 0.9, 200)
 
 
 fig, ax = plt.subplots()
