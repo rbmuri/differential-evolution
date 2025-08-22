@@ -195,6 +195,32 @@ class Populacao:
         mutation = Agente(res, self.chosen_function)
         mutation.ind = x1.ind
         return mutation
+    
+
+    def SBX(self, p1, p2):
+        xmin = 0
+        nc = 10 #how far from parents the offspring will be
+        c1 = []
+        c2 = []
+        for i in range(len(p1.x)):
+            if p1.x[i] < p2.x[i]:
+                x1 = p1.x[i]
+                x2 = p2.x[i]
+            else:
+                x1 = p2.x[i]
+                x2 = p1.x[i]
+            beta  = 1 + (2 * (x1 - xmin)) / (x2 - x1)
+            alpha = 2 - pow(beta, -(nc + 1))
+            u = np.random.random()
+            if u <= (1 / alpha):
+                betaq = pow(u * alpha, 1 / (nc + 1))
+            else:
+                betaq = pow(1 / (2 - u * alpha), 1 / (nc + 1))
+            c1.append( ((x1 + x2) - betaq * (x2 - x1)) * 0.5 )
+            c2.append( ((x1 + x2) + betaq * (x2 - x1)) * 0.5 )
+
+
+        return c1, c2
         
 
     def update_y(self):
@@ -205,6 +231,8 @@ class Populacao:
             self.pop.append(agent)
 #            if agent.y < self.best.y:
 #                self.best = agent
+
+    def constraints(self):
 
     def initpop(self):
         self.pop_raw = np.random.random((self.size, self.dim))
@@ -236,6 +264,11 @@ class Populacao:
 
         #mutate
         mutation = self.mutate(x1, x2, x3, x4)
+        if False:
+            mutation, mutation2 = self.SBX(x1, x2)
+            mutation = Agente(mutation, self.chosen_function)
+            mutation2 = Agente(mutation2, self.chosen_function)
+            self.mutatedpop.append(mutation2)
         self.mutatedpop.append(mutation)
 #        if mutation.y < x1.y:
 #            self.pop[ind] = mutation

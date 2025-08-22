@@ -3,7 +3,7 @@ from pymoo.problems import get_problem
 from pymoo.termination import get_termination
 from pymoo.optimize import minimize
 
-problem = get_problem("bnh")
+problem = get_problem("zdt1")
 
 
 from pymoo.core.problem import Problem
@@ -12,7 +12,7 @@ import numpy as np
 
 algorithm = NSGA2(pop_size=100)
 
-termination = get_termination("n_gen", 50)
+termination = get_termination("n_gen", 100)
 
 res = minimize(problem,
                algorithm,

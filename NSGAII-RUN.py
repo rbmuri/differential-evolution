@@ -1,6 +1,6 @@
 from NSGAII import *
 
-chosen_function = "bnh"
+chosen_function = "zdt1"
 
 def test(f, pop, cr, gen):
     y_vector = []
@@ -23,7 +23,7 @@ def test(f, pop, cr, gen):
     res = sorted(y_vector)
     return res
 
-ys = test(0.8, 100, 0.9, 200)
+ys = test(0.8, 100, 0.9, 100)
 
 
 fig, ax = plt.subplots()
